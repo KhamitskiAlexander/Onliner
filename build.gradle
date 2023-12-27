@@ -1,19 +1,49 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'io.qameta.allure' version '2.11.2'
 }
-
-group 'org.example'
-version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.22.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.22.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.22.0'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.9'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.9'
+    implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '5.5.3'
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+    implementation group: 'org.assertj', name: 'assertj-core', version: '3.21.0'
+    implementation group: 'com.github.javafaker', name: 'javafaker', version: '1.0.2'
+    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
+    testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.10.4'
+    testImplementation group: 'io.cucumber', name: 'cucumber-testng', version: '6.10.4'
+    testImplementation group: 'io.qameta.allure', name: 'allure-cucumber6-jvm', version: '2.14.0'
+    testRuntimeOnly('org.slf4j:slf4j-simple:1.7.33')
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    testCompileOnly 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
-test {
-    useJUnitPlatform()
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    sourceCompatibility = 16
+    targetCompatibility = 16
+}
+
+task executeUITests(type: Test) {
+    useTestNG()
+    options {
+        systemProperty 'cucumber.features', "${rootProject.rootDir}/src/test/resources/features/"
+        systemProperty 'cucumber.plugin', 'rerun:build/firstRerun.txt,io.qameta.allure.cucumber6jvm.AllureCucumber6Jvm'
+        systemProperty 'cucumber.filter.tags', '@ui'
+        doFirst {
+            systemProperties(System.getProperties())
+        }
+        testLogging.showStandardStreams = true
+        scanForTestClasses = false
+    }
 }
