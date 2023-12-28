@@ -34,6 +34,15 @@ tasks.withType(JavaCompile).configureEach {
     targetCompatibility = 16
 }
 
+task cleanUp(type: Delete) {
+    delete '.gradle'
+    delete '.idea'
+    delete 'build'
+    delete 'target'
+}
+
+clean.dependsOn cleanUp
+
 task executeUITests(type: Test) {
     useTestNG()
     options {

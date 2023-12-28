@@ -23,8 +23,8 @@
 
 
 3. From command line from project's root:
-   - For local run: ``./gradlew clean executeUITests`` 
-   - For remote run: ``./gradlew clean executeUITests -DBROWSER='remote'``
+   - For local run: ``./gradlew cleanUp executeUITests`` 
+   - For remote run: ``./gradlew cleanUp executeUITests -Dbrowser='remote'``
    You can open Selenoid Grid on the next local host: http://localhost:4444/ui#/sessions
 ![Selenium Grid](images/SeleniumGrid.png)
 

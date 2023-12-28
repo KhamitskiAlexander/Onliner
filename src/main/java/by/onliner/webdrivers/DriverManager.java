@@ -37,7 +37,7 @@ public final class DriverManager {
      */
     public void initializeDriver() {
         PropertiesManager propertiesManager = new PropertiesManager();
-        String browser = System.getProperty("BROWSER", propertiesManager.get("BROWSER"));
+        String browser = System.getProperty("browser", propertiesManager.get("browser"));
         if (browser.equalsIgnoreCase("chrome")) {
             webDriver = DriverFactory.getDriver(DriverType.CHROME);
         } else if (browser.equalsIgnoreCase("firefox")) {
