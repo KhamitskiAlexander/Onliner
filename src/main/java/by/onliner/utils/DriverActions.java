@@ -15,6 +15,7 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
@@ -137,6 +138,18 @@ public class DriverActions {
     }
 
     /**
+     * Waits and gets the text of an WebElement.
+     *
+     * @param element WebElement to wait and get the text.
+     * @return Text of element.
+     */
+    public static String getText(final WebElement element) {
+        LOGGER.info("Get text from element with {} locator.", element);
+        waitToBeVisible(element);
+        return element.getText();
+    }
+
+    /**
      * Gets Web Element attribute value.
      *
      * @param locator   page object Web Element.
@@ -199,6 +212,12 @@ public class DriverActions {
 
     public static void jsScrollTo(final By locator) {
         WebElement element = getDriverWait().until(elementToBeClickable(locator));
+        JavascriptExecutor jsExec = (JavascriptExecutor) DriverManager.getInstance().getWebDriver();
+        jsExec.executeScript(SCROLL_TO_JS_SCRIPT, element);
+    }
+
+    public static void jsScrollTo(final WebElement element) {
+        waitToBeVisible(element);
         JavascriptExecutor jsExec = (JavascriptExecutor) DriverManager.getInstance().getWebDriver();
         jsExec.executeScript(SCROLL_TO_JS_SCRIPT, element);
     }
@@ -281,5 +300,16 @@ public class DriverActions {
                         NoSuchElementException.class,
                         StaleElementReferenceException.class,
                         WebDriverException.class));
+    }
+
+    /**
+     * hover to element by locator
+     * @param locator locator to hover
+     */
+    public static void hoverToElement(final By locator) {
+        Actions actions = new Actions(DriverManager.getInstance().getWebDriver());
+        WebElement element = getDriverWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
+        LOGGER.info("Hover nouse to: '{}'", locator.toString());
+        actions.moveToElement(element).perform();
     }
 }
